@@ -9,10 +9,10 @@ import CountdownTimer from "@ui/countdown/layout-01";
 import { useContract } from "@hooks";
 import ProductTitle from "@components/product-details/title";
 import PurchaseModal from "@components/modals/purchase-modal";
-import ProductCategory from "@components/product-details/category";
-import ProductCollection from "@components/product-details/collection";
+// import ProductCategory from "@components/product-details/category";
+// import ProductCollection from "@components/product-details/collection";
 import BidTab from "@components/product-details/bid-tab";
-import PlaceBet from "@components/product-details/place-bet";
+// import PlaceBet from "@components/product-details/place-bet";
 import { NftType } from "@utils/types";
 import { ChainConfig } from "@constant";
 

@@ -12,7 +12,7 @@ import {
     // NotifactionType,
     // SellerType,
 } from "@utils/types";
-import { shuffleArray } from "@utils/methods";
+// import { shuffleArray } from "@utils/methods";
 import MintItem from "@components/mint-item";
 
 const ProductArea = ({ className, space, data }) => (

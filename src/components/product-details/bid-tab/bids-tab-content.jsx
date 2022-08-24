@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import PropTypes from "prop-types";
 import TopSeller from "@components/top-seller/layout-02";
 // import { IDType, ImageType } from "@utils/types";
