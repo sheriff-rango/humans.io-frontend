@@ -150,7 +150,7 @@ const Updater = () => {
                     const newItem = {
                         token_address: key,
                         token_id: item.token_id,
-                        collection: collection.collection_info.title || "",
+                        collection: collection.collection_info?.title || "",
                         image_url: item.nft_info?.extension?.image_url,
                         token_url: item.nft_info?.token_uri,
                     };
