@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Modal from "react-bootstrap/Modal";
 import Button from "@ui/button";
@@ -12,7 +12,9 @@ const PurchaseModal = ({
     handleClickConfirm,
 }) => {
     const [amount, setAmount] = useState();
+    const [checkboxChecked, setCheckboxChecked] = useState(false);
     const [isPendingTx, setIsPendingTx] = useState(false);
+    const datePickerEl = useRef(null);
     const balance = useAppSelector((state) => state.balance);
 
     const handleChangeAmount = (e) => {
@@ -20,11 +22,23 @@ const PurchaseModal = ({
         const { value } = e.target;
         setAmount(value);
     };
+    const handleChangeCheckbox = (e) => {
+        const { checked } = e.target;
+        setCheckboxChecked(checked);
+    };
     const handleConfirm = async () => {
         if (handleClickConfirm) {
+            const expireDate = datePickerEl?.current?.value
+                ? new Date(datePickerEl?.current?.value)
+                : new Date();
+            const now = new Date();
+            const diff = (expireDate - now) / 1000;
             setIsPendingTx(true);
             handleClickConfirm(
-                amountOptions?.disabled ? amountOptions?.defaultAmount : amount,
+                amountOptions?.disabled
+                    ? amountOptions?.defaultAmount
+                    : amount || amountOptions?.defaultAmount,
+                { isAuction: checkboxChecked, expire: diff },
                 () => {
                     setIsPendingTx(false);
                 }
@@ -71,7 +85,8 @@ const PurchaseModal = ({
                                     disabled={amountOptions?.disabled}
                                     onChange={handleChangeAmount}
                                 />
-                                <span>{amountOptions?.denom || "wETH"}</span>
+                                {/* <span>{amountOptions?.denom || "uheart"}</span> */}
+                                <span>HEART</span>
                             </div>
                         </div>
 
@@ -83,14 +98,57 @@ const PurchaseModal = ({
                             </div>
                             <div className="bid-content-right">
                                 <span>
-                                    {`${balance.amount || ""} ${
+                                    {`${balance.amount || ""} HEART`}
+                                    {/* {`${balance.amount || ""} ${
                                         balance.denom || ""
-                                    }`}
+                                    }`} */}
                                 </span>
-                                <span>10 uheart</span>
+                                <span>10 HEART</span>
                                 <span />
                             </div>
                         </div>
+                        {generalOptions.isSelling && (
+                            <div
+                                style={{ alignItems: "center" }}
+                                className="bid-content-mid"
+                            >
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        checked={checkboxChecked}
+                                        className="rn-check-box-input"
+                                        onChange={handleChangeCheckbox}
+                                        id="auction-checkbox"
+                                    />
+                                    <label
+                                        className="rn-check-box-label"
+                                        htmlFor="auction-checkbox"
+                                    >
+                                        Auction
+                                    </label>
+                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: 10,
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <label
+                                        className="rn-check-box-label"
+                                        htmlFor="expire-date"
+                                    >
+                                        Expire Date
+                                    </label>
+                                    <input
+                                        style={{ width: "max-content" }}
+                                        ref={datePickerEl}
+                                        type="datetime-local"
+                                        id="expire-date"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="bit-continue-button">
                         <Button
@@ -123,6 +181,7 @@ PurchaseModal.propTypes = {
     generalOptions: PropTypes.shape({
         title: PropTypes.string.isRequired,
         buttonString: PropTypes.string.isRequired,
+        isSelling: PropTypes.bool,
         description: PropTypes.string,
         amountDescription: PropTypes.string,
     }).isRequired,

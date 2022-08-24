@@ -49,6 +49,23 @@ const menuData = [
         text: "Mint",
         path: "/random-mint",
     },
+    {
+        id: 5,
+        text: "Create",
+        path: "#!",
+        submenu: [
+            {
+                id: 51,
+                text: "Create Collection",
+                path: "/create-collection",
+            },
+            {
+                id: 52,
+                text: "Create NFT",
+                path: "/create-nft",
+            },
+        ],
+    },
 ];
 
 const Header = ({ className }) => {
@@ -57,15 +74,6 @@ const Header = ({ className }) => {
     const { search, searchHandler } = useFlyoutSearch();
     const { connect, connectedWallet } = useWalletManager();
     // const { connectedWallet, connect } = useContext(CustomWalletContext);
-
-    // const handleClickConnectWalletButton = async () => {
-    //     if (connectedWallet) {
-    //         disconnect();
-    //     } else {
-    //         await checkKeplr();
-    //         connect();
-    //     }
-    // };
 
     return (
         <>

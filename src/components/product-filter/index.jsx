@@ -4,10 +4,10 @@ import NiceSelect from "@ui/nice-select";
 import InputRange from "@ui/input-range";
 
 const ProductFilter = forwardRef(
-    ({ slectHandler, sortHandler, priceHandler, inputs }, ref) => (
+    ({ selectHandler, priceHandler, inputs }, ref) => (
         <div className="default-exp-wrapper default-exp-expand" ref={ref}>
             <div className="inner">
-                <div className="filter-select-option">
+                {/* <div className="filter-select-option">
                     <h6 className="filter-leble">LIKES</h6>
                     <NiceSelect
                         options={[
@@ -30,7 +30,7 @@ const ProductFilter = forwardRef(
                             { value: "Collectionable", text: "Collectionable" },
                         ]}
                         placeholder="Category"
-                        onChange={slectHandler}
+                        onChange={selectHandler}
                         name="category"
                     />
                 </div>
@@ -54,10 +54,10 @@ const ProductFilter = forwardRef(
                             },
                         ]}
                         placeholder="Collections"
-                        onChange={slectHandler}
+                        onChange={selectHandler}
                         name="collection"
                     />
-                </div>
+                </div> */}
 
                 <div className="filter-select-option">
                     <h6 className="filter-leble">Sale type</h6>
@@ -65,15 +65,10 @@ const ProductFilter = forwardRef(
                         options={[
                             { value: "all", text: "All Type" },
                             { value: "fixed-price", text: "Fixed price" },
-                            { value: "timed-auction", text: "Timed auction" },
-                            { value: "not-for-sale", text: "Not for sale" },
-                            {
-                                value: "open-for-offers",
-                                text: "Open for offers",
-                            },
+                            { value: "auction", text: "Auction" },
                         ]}
                         placeholder="Sale type"
-                        onChange={slectHandler}
+                        onChange={selectHandler}
                         name="sale_type"
                     />
                 </div>
@@ -96,8 +91,8 @@ const ProductFilter = forwardRef(
 ProductFilter.displayName = "ProductFilter";
 
 ProductFilter.propTypes = {
-    slectHandler: PropTypes.func,
-    sortHandler: PropTypes.func,
+    selectHandler: PropTypes.func,
+    // sortHandler: PropTypes.func,
     priceHandler: PropTypes.func,
     inputs: PropTypes.shape({
         price: PropTypes.arrayOf(PropTypes.number),

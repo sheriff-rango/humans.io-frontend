@@ -102,14 +102,14 @@ const UserDropdown = () => {
                 </div> */}
                 <ul className="list-inner">
                     <li>
-                        <Anchor path="/author">My Profile</Anchor>
+                        <Anchor path="/profile">My Profile</Anchor>
                     </li>
                     <li>
                         <Anchor path="/edit-profile">Edit Profile</Anchor>
                     </li>
-                    <li>
+                    {/* <li>
                         <Anchor path="/my-nfts">My Nfts</Anchor>
-                    </li>
+                    </li> */}
                     <li>
                         <button type="button" onClick={disconnect}>
                             Disconnect

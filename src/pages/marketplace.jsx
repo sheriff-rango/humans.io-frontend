@@ -39,7 +39,7 @@ const Product = () => {
             <Header />
             <main id="main-content">
                 <Breadcrumb pageTitle="Marketplace" currentPage="Marketplace" />
-                <ProductArea data={{ products: productData }} />
+                <ProductArea data={{ products: productData }} hiddenExpired />
             </main>
             <Footer />
         </Wrapper>

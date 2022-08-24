@@ -90,6 +90,13 @@ export const NftType = PropTypes.shape({
         amount: PropTypes.number.isRequired,
     }),
     offering_id: PropTypes.number,
+    sale_type: PropTypes.string,
+    expires_at: PropTypes.number,
+    funds_recipient: PropTypes.string,
+    bids: PropTypes.shape({
+        max_bid: PropTypes.string,
+        max_bidder: PropTypes.string,
+    }),
 });
 
 export const RandomMintData = PropTypes.shape({

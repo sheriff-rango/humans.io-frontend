@@ -92,7 +92,7 @@ function useContract() {
     );
 
     const sellNft = useCallback(
-        async (item, nftPrice) => {
+        async (item, nftPrice, extraOption) => {
             const targetCollection = collections[item.token_address];
             const regExp = /^(\d+(\.\d+)?)$/;
             const price = +nftPrice;
@@ -108,6 +108,10 @@ function useContract() {
                 toast.error("Invalid Price!");
                 throw new Error();
             }
+            if (!extraOption?.expire || extraOption.expire <= 0) {
+                toast.error("Invalid Expire Date!");
+                throw new Error();
+            }
             const marketplaceContract = MarketplaceContract;
             const message = {
                 send_nft: {
@@ -115,10 +119,22 @@ function useContract() {
                     token_id: item.token_id,
                     msg: btoa(
                         JSON.stringify({
-                            list_price: {
+                            // list_price: {
+                            //     denom: ChainConfig.microDenom,
+                            //     amount: `${price * 1e6}`,
+                            // },
+                            // image_url: item.image_url,
+                            sale_type: extraOption?.isAuction
+                                ? "auction"
+                                : "fixed_price",
+                            collection: item.token_address,
+                            token_id: item.token_id,
+                            price: {
                                 denom: ChainConfig.microDenom,
                                 amount: `${price * 1e6}`,
                             },
+                            funds_recipient: address,
+                            expires: Math.ceil(extraOption.expire),
                         })
                     ),
                 },
@@ -131,15 +147,28 @@ function useContract() {
                 toast.error("Fail!");
             }
         },
-        [collections, runExecute]
+        [address, collections, runExecute]
     );
 
     const withdrawNft = useCallback(
         async (item) => {
+            // const expiresAt = item.expires_at
+            //     ? new Date(item.expires_at)
+            //     : null;
+            // if (expiresAt && Number(new Date()) - Number(expiresAt) < 0) {
+            //     toast.error("You can't withdraw before expire date.");
+            //     throw new Error();
+            // }
+            // const message = {
+            //     withdraw_nft: {
+            //         offering_id: `${item.offering_id}`,
+            //         address: item.token_address,
+            //     },
+            // };
             const message = {
-                withdraw_nft: {
-                    offering_id: `${item.offering_id}`,
-                    address: item.token_address,
+                remove_ask: {
+                    collection: item.token_address,
+                    token_id: item.token_id,
                 },
             };
             try {
@@ -153,21 +182,92 @@ function useContract() {
         [runExecute]
     );
 
-    const buyNft = useCallback(
-        async (item) => {
-            const price = item?.price || {};
-
+    const setBid = useCallback(
+        async (item, price) => {
+            const expiresAt = item.expires_at
+                ? new Date(item.expires_at)
+                : null;
+            if (expiresAt && Number(new Date()) - Number(expiresAt) > 0) {
+                toast.error("You can't bid after expire date.");
+                throw new Error();
+            }
+            const regExp = /^(\d+(\.\d+)?)$/;
+            if (!regExp.test(price?.amount)) {
+                toast.error("Invalid Price!");
+                throw new Error();
+            }
+            let crrBid = Number(item.bids?.max_bid);
+            crrBid = Number.isNaN(crrBid) ? 0 : crrBid;
+            let newBid = Number(price.amount);
+            newBid = Number.isNaN(newBid) ? 0 : newBid * 1e6;
+            if (newBid <= crrBid) {
+                toast.error("Your bid should be greater than existing bid!");
+                throw new Error();
+            }
             const message = {
-                buy: {
-                    offering_id: `${item.offering_id}`,
-                    address: item.token_address,
+                set_bid: {
+                    collection: item.token_address,
+                    token_id: item.token_id,
                 },
             };
             try {
                 await runExecute(MarketplaceContract, message, {
-                    funds: `${price.amount / 1e6}`,
+                    funds: `${price.amount}`,
                     denom: price.denom,
                 });
+                toast.success("Success!");
+            } catch (err) {
+                const errMsg = err.message;
+                console.error(err, errMsg, typeof errMsg);
+                toast.error(`Fail! ${errMsg}`);
+            }
+        },
+        [runExecute]
+    );
+
+    const buyNft = useCallback(
+        async (item) => {
+            const price = item?.price || {};
+
+            // const message = {
+            //     buy: {
+            //         offering_id: `${item.offering_id}`,
+            //         address: item.token_address,
+            //     },
+            // };
+            try {
+                // await runExecute(MarketplaceContract, message, {
+                //     funds: `${price.amount / 1e6}`,
+                //     denom: price.denom,
+                // });
+                await setBid(item, { ...price, amount: price.amount / 1e6 });
+                // toast.success("Success!");
+            } catch (err) {
+                const errMsg = err.message;
+                console.error(err, errMsg, typeof errMsg);
+                toast.error(`Fail! ${errMsg}`);
+            }
+        },
+        [setBid]
+    );
+
+    const acceptBid = useCallback(
+        async (item) => {
+            const expiresAt = item.expires_at
+                ? new Date(item.expires_at)
+                : null;
+            if (expiresAt && Number(new Date()) - Number(expiresAt) < 0) {
+                toast.error("Auction is not ended yet.");
+                throw new Error();
+            }
+            const message = {
+                accept_bid: {
+                    collection: item.token_address,
+                    token_id: item.token_id,
+                },
+            };
+            try {
+                await runExecute(MarketplaceContract, message);
                 toast.success("Success!");
             } catch (err) {
                 const errMsg = err.message;
@@ -184,6 +284,8 @@ function useContract() {
         sellNft,
         withdrawNft,
         buyNft,
+        setBid,
+        acceptBid,
     };
 }
 

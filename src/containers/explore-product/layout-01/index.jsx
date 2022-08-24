@@ -1,9 +1,10 @@
-import { useReducer, useRef, useEffect, useCallback } from "react";
+import { useReducer, useRef, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import SectionTitle from "@components/section-title";
 import ProductFilter from "@components/product-filter";
 import NftItem from "@components/nft-item";
+import Pagination from "@components/pagination";
 import FilterButton from "@ui/filter-button";
 import { slideToggle } from "@utils/methods";
 import { SectionTitleType, NftType } from "@utils/types";
@@ -21,8 +22,11 @@ function reducer(state, action) {
     }
 }
 
-const ExploreProductArea = ({ className, space, data }) => {
+const COUNT_PER_PAGE = 10;
+
+const ExploreProductArea = ({ className, space, data, hiddenExpired }) => {
     // const itemsToFilter = [...data.products];
+    const [currentPage, setCurrentPage] = useState(1);
     const [state, dispatch] = useReducer(reducer, {
         filterToggle: false,
         products: data.products || [],
@@ -35,7 +39,44 @@ const ExploreProductArea = ({ className, space, data }) => {
         slideToggle(filterRef.current);
     };
 
-    const slectHandler = ({ value }, name) => {
+    const displayNfts = useMemo(() => {
+        const { price, sale_type } = state.inputs || {};
+        const filteredNfts = [];
+        state.products?.nft.forEach((nft) => {
+            let filtered = true;
+            if (hiddenExpired) {
+                const expiresAt = nft.expires_at
+                    ? new Date(nft.expires_at)
+                    : null;
+                const expired =
+                    expiresAt && Number(new Date()) - Number(expiresAt) > 0;
+                filtered = filtered && (!expiresAt || !expired);
+            }
+            let nftPrice = Number(nft.price?.amount);
+            nftPrice = Number.isNaN(nftPrice) ? 0 : nftPrice / 1e6;
+            filtered = filtered && nftPrice >= price[0] && nftPrice <= price[1];
+            if (sale_type === "fixed-price") {
+                filtered = filtered && nft.sale_type === "fixed_price";
+            } else if (sale_type === "auction") {
+                filtered = filtered && nft.sale_type === "auction";
+            }
+            if (filtered) {
+                filteredNfts.push(nft);
+            }
+        });
+        return filteredNfts;
+    }, [hiddenExpired, state.inputs, state.products?.nft]);
+
+    const numberOfPages = Math.ceil(
+        (displayNfts?.length || 0) / COUNT_PER_PAGE
+    );
+
+    const paginationHandler = (page) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const selectHandler = ({ value }, name) => {
         dispatch({ type: "SET_INPUTS", payload: { [name]: value } });
     };
 
@@ -43,15 +84,15 @@ const ExploreProductArea = ({ className, space, data }) => {
         dispatch({ type: "SET_INPUTS", payload: { price: value } });
     };
 
-    const sortHandler = ({ value }) => {
-        const sortedProducts = state.products.sort((a, b) => {
-            if (value === "most-liked") {
-                return a.likeCount < b.likeCount ? 1 : -1;
-            }
-            return a.likeCount > b.likeCount ? 1 : -1;
-        });
-        dispatch({ type: "SET_PRODUCTS", payload: sortedProducts });
-    };
+    // const sortHandler = ({ value }) => {
+    //     const sortedProducts = state.products.sort((a, b) => {
+    //         if (value === "most-liked") {
+    //             return a.likeCount < b.likeCount ? 1 : -1;
+    //         }
+    //         return a.likeCount > b.likeCount ? 1 : -1;
+    //     });
+    //     dispatch({ type: "SET_PRODUCTS", payload: sortedProducts });
+    // };
 
     // !must removed in the future;
     useEffect(() => {
@@ -59,43 +100,6 @@ const ExploreProductArea = ({ className, space, data }) => {
     }, [data.products]);
 
     // const filterMethods = (item, filterKey, value) => {
-    //     if (value === "all") return false;
-    //     let itemKey = filterKey;
-    //     if (filterKey === "category") {
-    //         itemKey = "categories";
-    //     }
-    //     if (filterKey === "price") {
-    //         return (
-    //             item[itemKey].amount <= value[0] / 100 ||
-    //             item[itemKey].amount >= value[1] / 100
-    //         );
-    //     }
-    //     if (Array.isArray(item[itemKey])) {
-    //         return !item[itemKey].includes(value);
-    //     }
-    //     if (filterKey === "collection") {
-    //         return item[itemKey].name !== value;
-    //     }
-    //     return item[itemKey] !== value;
-    // };
-
-    // const itemFilterHandler = useCallback(() => {
-    //     let filteredItems = [];
-
-    //     filteredItems = itemsToFilter.filter((item) => {
-    //         // eslint-disable-next-line no-restricted-syntax
-    //         for (const key in state.inputs) {
-    //             if (filterMethods(item, key, state.inputs[key])) return false;
-    //         }
-    //         return true;
-    //     });
-    //     dispatch({ type: "SET_PRODUCTS", payload: filteredItems });
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [state.inputs]);
-
-    // useEffect(() => {
-    //     itemFilterHandler();
-    // }, [itemFilterHandler]);
 
     return (
         <div
@@ -125,30 +129,46 @@ const ExploreProductArea = ({ className, space, data }) => {
 
                 <ProductFilter
                     ref={filterRef}
-                    slectHandler={slectHandler}
-                    sortHandler={sortHandler}
+                    selectHandler={selectHandler}
+                    // sortHandler={sortHandler}
                     priceHandler={priceHandler}
                     inputs={state.inputs}
                 />
                 <div className="row g-5">
-                    {state.products.length > 0 ? (
+                    {displayNfts?.length > 0 ? (
                         <>
-                            {state.products.slice(0, 10).map((prod) => (
-                                <div
-                                    key={prod.id}
-                                    className="col-5 col-lg-4 col-md-6 col-sm-6 col-12"
-                                >
-                                    <NftItem
-                                        overlay
-                                        auction_date={prod.auction_date}
-                                        item={prod.nft}
-                                    />
-                                </div>
-                            ))}
+                            {displayNfts
+                                .slice(
+                                    (currentPage - 1) * COUNT_PER_PAGE,
+                                    (currentPage - 1) * COUNT_PER_PAGE +
+                                        COUNT_PER_PAGE
+                                )
+                                .map((prod) => (
+                                    <div
+                                        key={prod.token_id}
+                                        className="col-5 col-lg-4 col-md-6 col-sm-6 col-12"
+                                    >
+                                        <NftItem overlay item={prod} />
+                                    </div>
+                                ))}
                         </>
                     ) : (
                         <p>No item to show</p>
                     )}
+                </div>
+                <div className="row">
+                    <div
+                        className="col-lg-12"
+                        data-sal="slide-up"
+                        data-sal-delay="950"
+                        data-sal-duration="800"
+                    >
+                        <Pagination
+                            currentPage={currentPage}
+                            numberOfPages={numberOfPages}
+                            onClick={paginationHandler}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,7 +178,8 @@ const ExploreProductArea = ({ className, space, data }) => {
 ExploreProductArea.propTypes = {
     className: PropTypes.string,
     space: PropTypes.oneOf([1, 2]),
-    data: PropTypes.shape({
+    hiddenExpired: PropTypes.bool,
+    data: PropTypes.arrayOf({
         section_title: SectionTitleType,
         products: PropTypes.shape({
             id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])

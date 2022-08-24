@@ -4,12 +4,14 @@ import clsx from "clsx";
 import Collection from "@components/collection";
 import Pagination from "@components/pagination";
 import { CollectionType } from "@utils/types";
+import { useAppSelector } from "@app/hooks";
 
 const POSTS_PER_PAGE = 8;
 
 const CollectionArea = ({ className, space, id, data }) => {
     const [collections, setCollections] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const marketplaceNfts = useAppSelector((state) => state.marketplaceNfts);
     const numberOfPages = Math.ceil(data.collections.length / POSTS_PER_PAGE);
     const paginationHandler = (page) => {
         setCurrentPage(page);
@@ -41,8 +43,11 @@ const CollectionArea = ({ className, space, id, data }) => {
                             className="col-lg-6 col-xl-3 col-md-6 col-sm-6 col-12"
                         >
                             <Collection
+                                id={collection.id}
                                 title={collection.title}
-                                total_item={collection.total_item}
+                                total_item={
+                                    marketplaceNfts[collection.id]?.length || 0
+                                }
                                 path={collection.slug}
                                 image={collection.image}
                                 thumbnails={collection.thumbnails}

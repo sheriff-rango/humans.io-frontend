@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import collectionReducer from "./collectionsSlice";
 import marketplaceNftsReducer from "./marketplaceNftsSlice";
+import myNftsReducer from "./myNftsSlice";
 import balanceReducer from "./balanceSlice";
 
 const persistConfig = {
@@ -16,6 +17,7 @@ const reducer = persistReducer(
     combineReducers({
         collections: collectionReducer,
         marketplaceNfts: marketplaceNftsReducer,
+        myNfts: myNftsReducer,
         balance: balanceReducer,
     })
 );

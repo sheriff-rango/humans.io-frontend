@@ -76,21 +76,27 @@ const MintItem = ({
         setShowBidModal(true);
     };
 
-    const handleMint = async (amount, callback) => {
+    const handleMint = async (amount, extraOption, callback) => {
         try {
-            await runExecute(
-                contractAddress,
-                {
+            if (amount) {
+                await runExecute(
+                    contractAddress,
+                    {
+                        mint: {},
+                    },
+                    {
+                        funds: `${amount}`,
+                    }
+                );
+            } else {
+                await runExecute(contractAddress, {
                     mint: {},
-                },
-                {
-                    funds: `${amount}`,
-                }
-            );
+                });
+            }
             toast.success("Success!");
             setShowBidModal(false);
         } catch (e) {
-            // console.error(e, contractAddress, amount);
+            console.error(e, contractAddress, amount);
             toast.error(`Fail!`);
         } finally {
             callback();

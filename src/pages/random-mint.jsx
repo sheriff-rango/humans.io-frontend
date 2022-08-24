@@ -13,28 +13,32 @@ export async function getStaticProps() {
 
 const RandomMint = () => {
     const collections = useAppSelector((state) => state.collections);
-    const productData = Object.keys(collections).map((key) => {
+    const productData = [];
+    Object.keys(collections).forEach((key) => {
         const collection = collections[key];
-        return {
-            id: key,
-            title: collection.collection_info?.title || "",
-            price: {
-                public: {
-                    amount: collection.mint_info?.public_price?.amount,
-                    currency: ChainConfig.microDenom,
+        if (!collection.userDefined) {
+            productData.push({
+                id: key,
+                title: collection.collection_info?.title || "",
+                price: {
+                    public: {
+                        amount: collection.mint_info?.public_price?.amount,
+                        currency: ChainConfig.microDenom,
+                    },
+                    private: {
+                        amount: collection.mint_info?.private_price?.amount,
+                        currency: ChainConfig.microDenom,
+                    },
                 },
-                private: {
-                    amount: collection.mint_info?.private_price?.amount,
-                    currency: ChainConfig.microDenom,
-                },
-            },
-            images: [
-                {
-                    src: collection.collection_info?.logo_url || "",
-                },
-            ],
-            contractAddress: collection.minter,
-        };
+                images: [
+                    {
+                        // src: collection.collection_info?.logo_url || "",
+                        src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png",
+                    },
+                ],
+                contractAddress: collection.minter,
+            });
+        }
     });
 
     return (
