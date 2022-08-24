@@ -2,37 +2,46 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import Anchor from "@ui/anchor";
+import { useWalletManager } from "@noahsaso/cosmodal";
 
-const TopSeller = ({ name, time, path, image, eth, isVarified }) => (
-    <div className="top-seller-inner-one">
-        <div className="top-seller-wrapper">
-            {image?.src && (
-                <div className={clsx("thumbnail", isVarified && "varified")}>
-                    <Anchor path={path}>
-                        <Image
-                            src={image.src}
-                            alt={image?.alt || "Nft_Profile"}
-                            width={image?.width || 50}
-                            height={image?.height || 50}
-                            layout="fixed"
-                        />
-                    </Anchor>
+const TopSeller = ({ name, time, path, image, eth, isVarified }) => {
+    const { connectedWallet } = useWalletManager();
+    return (
+        <div className="top-seller-inner-one">
+            <div className="top-seller-wrapper">
+                {image?.src && (
+                    <div
+                        className={clsx("thumbnail", isVarified && "varified")}
+                    >
+                        <Anchor path={path}>
+                            <Image
+                                src={image.src}
+                                alt={image?.alt || "Nft_Profile"}
+                                width={image?.width || 50}
+                                height={image?.height || 50}
+                                layout="fixed"
+                            />
+                        </Anchor>
+                    </div>
+                )}
+                <div className="top-seller-content">
+                    <span>
+                        {!!eth && (
+                            <>
+                                {eth} by{" "}
+                                {name === connectedWallet?.address
+                                    ? "You"
+                                    : name}
+                            </>
+                        )}
+                        {/* <Anchor path={path}>{name}</Anchor> */}
+                    </span>
+                    {time && <span className="count-number">{time}</span>}
                 </div>
-            )}
-            <div className="top-seller-content">
-                <span>
-                    {!!eth && (
-                        <>
-                            {eth} by {name}
-                        </>
-                    )}
-                    {/* <Anchor path={path}>{name}</Anchor> */}
-                </span>
-                {time && <span className="count-number">{time}</span>}
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 TopSeller.propTypes = {
     name: PropTypes.string.isRequired,
