@@ -152,11 +152,14 @@ const CreateNewArea = ({ className, space }) => {
                         reset();
                         setSelectedImage();
                     } catch (err) {
+                        // eslint-disable-next-line no-console
                         console.error(err);
                         toast.error("Mint Failed!");
                     }
                 })
                 .catch((err) => {
+                    // eslint-disable-next-line no-console
+                    console.error(err);
                     toast.error("Fail!");
                 });
         }
@@ -310,6 +313,7 @@ const CreateNewArea = ({ className, space }) => {
                                             onChange={imageChange}
                                         />
                                         {selectedImage && (
+                                            // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 id="createfileImage"
                                                 src={URL.createObjectURL(

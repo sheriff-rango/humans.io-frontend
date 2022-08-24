@@ -6,9 +6,9 @@ import TabPane from "react-bootstrap/TabPane";
 import Nav from "react-bootstrap/Nav";
 import BidsTabContent from "./bids-tab-content";
 // import DetailsTabContent from "./details-tab-content";
-import HistoryTabContent from "./history-tab-content";
+// import HistoryTabContent from "./history-tab-content";
 
-const BidTab = ({ className, bids, owner, properties, tags, history }) => (
+const BidTab = ({ className, bids }) => (
     <TabContainer defaultActiveKey="nav-home">
         <div className={clsx("tab-wrapper-one", className)}>
             <nav className="tab-button-one">
@@ -46,10 +46,10 @@ const BidTab = ({ className, bids, owner, properties, tags, history }) => (
 BidTab.propTypes = {
     className: PropTypes.string,
     bids: PropTypes.arrayOf(PropTypes.shape({})),
-    owner: PropTypes.shape({}),
-    properties: PropTypes.arrayOf(PropTypes.shape({})),
-    tags: PropTypes.arrayOf(PropTypes.shape({})),
-    history: PropTypes.arrayOf(PropTypes.shape({})),
+    // owner: PropTypes.shape({}),
+    // properties: PropTypes.arrayOf(PropTypes.shape({})),
+    // tags: PropTypes.arrayOf(PropTypes.shape({})),
+    // history: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default BidTab;

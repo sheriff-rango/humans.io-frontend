@@ -96,6 +96,7 @@ const MintItem = ({
             toast.success("Success!");
             setShowBidModal(false);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e, contractAddress, amount);
             toast.error(`Fail!`);
         } finally {

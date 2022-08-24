@@ -115,6 +115,7 @@ const CustomWalletProvider = ({ children }) => {
 
     const connect = useCallback(async () => {
         if (!window.keplr) {
+            // eslint-disable-next-line no-alert
             alert("Please install keplr extension");
         } else {
             await checkKeplr();
@@ -124,6 +125,7 @@ const CustomWalletProvider = ({ children }) => {
                         getChainConfig(ChainConfig)
                     );
                 } catch (e) {
+                    // eslint-disable-next-line no-console
                     console.error(e);
                 }
             }

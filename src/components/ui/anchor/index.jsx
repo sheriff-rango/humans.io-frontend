@@ -70,7 +70,7 @@ Anchor.propTypes = {
     label: PropTypes.string,
     target: PropTypes.oneOf(["_blank", "_self", "_parent", "_top"]),
     onClick: PropTypes.func,
-    sx: PropTypes.objectOf(PropTypes.any),
+    // sx: PropTypes.objectOf(PropTypes.any),
 };
 
 Anchor.displayName = "Anchor";

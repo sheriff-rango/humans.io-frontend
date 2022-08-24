@@ -143,6 +143,7 @@ function useContract() {
                 await runExecute(item.token_address, message);
                 toast.success("Success!");
             } catch (err) {
+                // eslint-disable-next-line no-console
                 console.error(err);
                 toast.error("Fail!");
             }
@@ -175,6 +176,7 @@ function useContract() {
                 await runExecute(MarketplaceContract, message);
                 toast.success("Success!");
             } catch (err) {
+                // eslint-disable-next-line no-console
                 console.error("withdraw error", item, message, err);
                 toast.error("Fail!");
             }
@@ -218,6 +220,7 @@ function useContract() {
                 toast.success("Success!");
             } catch (err) {
                 const errMsg = err.message;
+                // eslint-disable-next-line no-console
                 console.error(err, errMsg, typeof errMsg);
                 toast.error(`Fail! ${errMsg}`);
             }
@@ -244,6 +247,7 @@ function useContract() {
                 // toast.success("Success!");
             } catch (err) {
                 const errMsg = err.message;
+                // eslint-disable-next-line no-console
                 console.error(err, errMsg, typeof errMsg);
                 toast.error(`Fail! ${errMsg}`);
             }
@@ -271,6 +275,7 @@ function useContract() {
                 toast.success("Success!");
             } catch (err) {
                 const errMsg = err.message;
+                // eslint-disable-next-line no-console
                 console.error(err, errMsg, typeof errMsg);
                 toast.error(`Fail! ${errMsg}`);
             }
