@@ -17,6 +17,7 @@ const RandomMint = () => {
     Object.keys(collections).forEach((key) => {
         const collection = collections[key];
         if (!collection.userDefined) {
+            const image_url = collection?.collection_info?.background_url;
             productData.push({
                 id: key,
                 title: collection.collection_info?.title || "",
@@ -33,7 +34,9 @@ const RandomMint = () => {
                 images: [
                     {
                         // src: collection.collection_info?.logo_url || "",
-                        src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png",
+                        src: image_url.includes("background_url")
+                            ? "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png"
+                            : image_url,
                     },
                 ],
                 contractAddress: collection.minter,

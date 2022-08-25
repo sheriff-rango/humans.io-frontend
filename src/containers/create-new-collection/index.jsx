@@ -48,6 +48,7 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
     };
 
     const onSubmit = async (data) => {
+        // console.log(data)
         if (!connectedWallet) {
             toast.error("Connect Wallet!");
             return;
@@ -72,7 +73,48 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
                 const logo_url = `https://secretsteampunks.mypinata.cloud/ipfs/${logoImageHash}`;
                 let msg = {};
                 if (isAdminPage) {
-                    msg = {};
+                    const time = new Date();
+                    const crr_time = Math.floor(time / 1000) + 1800;
+                    msg = {
+                        add_admin_collection: {
+                            collection_info: {
+                                name: new Date().toString(),
+                                symbol: new Date().toString(),
+                                collection_info: {
+                                    title: data.title,
+                                    background_url,
+                                    logo_url,
+                                    description: data.description,
+                                },
+                                royalty_info: {
+                                    address: connectedWallet.address,
+                                    royalty_rate: `${royaltyRate}`,
+                                },
+                                mint_info: {
+                                    base_token_uri: data.tokenUri,
+                                    total_supply: data.totalSupply,
+                                    start_mint_time: crr_time,
+                                    per_address_limit: data.perAddressLimit,
+                                    public_price: {
+                                        denom: "uheart",
+                                        amount: String(
+                                            Number(data.publicPrice) * 1e6
+                                        ),
+                                    },
+                                    private_price: {
+                                        denom: "uheart",
+                                        amount: String(
+                                            Number(data.privatePrice) * 1e6
+                                        ),
+                                    },
+                                    mint_flag: true,
+                                    is_public_mint: true,
+                                    nft_base_name: data.baseName,
+                                    base_image_uri: data.imageUri,
+                                },
+                            },
+                        },
+                    };
                 } else {
                     msg = {
                         add_user_collection: {
