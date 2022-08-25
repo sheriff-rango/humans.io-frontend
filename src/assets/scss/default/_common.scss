@@ -511,6 +511,9 @@ nav {
 .container {
     padding: 2px 16px;
 }
+.container-no-max-width {
+    max-width: unset !important;
+}
 .max-fit-content {
     max-width: fit-content;
 }

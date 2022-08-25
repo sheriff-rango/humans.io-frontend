@@ -10,7 +10,6 @@ import { uploadFileToIpfs, uploadJSONToIpfs } from "@utils/ipfs";
 import { useAppSelector } from "@app/hooks";
 import { useWalletManager } from "@noahsaso/cosmodal";
 import { useContract } from "@hooks";
-import { UserDefinedCollections } from "@constant";
 
 const CreateNewArea = ({ className, space }) => {
     const [showProductModal, setShowProductModal] = useState(false);
@@ -271,15 +270,18 @@ const CreateNewArea = ({ className, space }) => {
         );
     };
 
-    const renderCollectionsOption = () =>
-        UserDefinedCollections.map((key) => {
-            const crrCollectionInfo = collectionInfo[key];
+    const renderCollectionsOption = () => {
+        const addresses = collectionInfo.addresses?.userDefined || [];
+        return addresses.map((collection) => {
+            const { address } = collection;
+            const crrCollectionInfo = collectionInfo[address];
             return connectedWallet?.address === crrCollectionInfo?.minter ? (
-                <option key={key} value={key}>
+                <option key={address} value={address}>
                     {crrCollectionInfo?.collection_info?.title || ""}
                 </option>
             ) : null;
         });
+    };
 
     return (
         <>

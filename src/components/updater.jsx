@@ -3,19 +3,19 @@ import { useWallet } from "@noahsaso/cosmodal";
 
 import { useRefresh, useContract } from "@hooks";
 import { useAppDispatch, useAppSelector } from "@app/hooks";
-import { setCollectionInfo } from "@app/collectionsSlice";
+import {
+    setCollectionAddresses,
+    setCollectionInfo,
+} from "@app/collectionsSlice";
 import {
     ChainConfig,
+    CollectionCreatorContract,
     MarketplaceContract,
-    UserDefinedCollections,
 } from "@constant";
 import { setMarketplaceNfts } from "@app/marketplaceNftsSlice";
 // import { CustomWalletContext } from "@context";
 import { setBalance } from "@app/balanceSlice";
 import { clearMyNfs, setMyNfts } from "@app/myNftsSlice";
-
-// Demo Data
-const NFT_ADDRESSES = [];
 
 const MAX_ITEMS = 10;
 
@@ -161,35 +161,88 @@ const Updater = () => {
     }, [address, collections, dispatch, runQuery]);
 
     const fetchCollectionInfo = useCallback(async () => {
-        NFT_ADDRESSES.forEach(async (nftAddress) => {
-            try {
-                const collectionInfo = await runQuery(nftAddress, {
-                    get_collection_state: {},
-                });
-                dispatch(
-                    setCollectionInfo([
-                        nftAddress,
-                        { ...collectionInfo, nftAddress },
-                    ])
-                );
-            } catch (e) {
-                // console.error(nftAddress, e)
+        const collectionCreatorStateInfo = await runQuery(
+            CollectionCreatorContract,
+            {
+                get_state_info: {},
             }
-        });
-        UserDefinedCollections.forEach(async (nftAddress) => {
-            try {
-                const collectionInfo = await runQuery(nftAddress, {
-                    get_collection_state: {},
-                });
-                dispatch(
-                    setCollectionInfo([
-                        nftAddress,
-                        { ...collectionInfo, nftAddress, userDefined: true },
-                    ])
-                );
-            } catch (e) {
-                // console.error(nftAddress, e)
+        );
+        const queries = [];
+        for (
+            let i = 0;
+            i <
+            Math.ceil(
+                (collectionCreatorStateInfo?.collection_count || 0) / MAX_ITEMS
+            );
+            i++
+        ) {
+            const ids = [];
+            for (let j = 0; j < MAX_ITEMS; j++) {
+                ids.push(`${MAX_ITEMS * i + j + 1}`);
             }
+            queries.push(
+                runQuery(CollectionCreatorContract, {
+                    get_collections: {
+                        id: ids,
+                    },
+                })
+            );
+        }
+        Promise.all(queries).then((queryResults) => {
+            const randomMints = [];
+            const userDefinedMints = [];
+            queryResults.forEach((result) => {
+                result.forEach((collection) => {
+                    if (collection.is_rand) {
+                        randomMints.push(collection);
+                    } else {
+                        userDefinedMints.push(collection);
+                    }
+                });
+            });
+            dispatch(
+                setCollectionAddresses({
+                    random: randomMints,
+                    userDefined: userDefinedMints,
+                })
+            );
+
+            randomMints.forEach(async (collection) => {
+                const nftAddress = collection.address;
+                try {
+                    const collectionInfo = await runQuery(nftAddress, {
+                        get_collection_state: {},
+                    });
+                    dispatch(
+                        setCollectionInfo([
+                            nftAddress,
+                            { ...collectionInfo, nftAddress },
+                        ])
+                    );
+                } catch (e) {
+                    // console.error(nftAddress, e)
+                }
+            });
+            userDefinedMints.forEach(async (collection) => {
+                const nftAddress = collection.address;
+                try {
+                    const collectionInfo = await runQuery(nftAddress, {
+                        get_collection_state: {},
+                    });
+                    dispatch(
+                        setCollectionInfo([
+                            nftAddress,
+                            {
+                                ...collectionInfo,
+                                nftAddress,
+                                userDefined: true,
+                            },
+                        ])
+                    );
+                } catch (e) {
+                    // console.error(nftAddress, e)
+                }
+            });
         });
     }, [dispatch, runQuery]);
 

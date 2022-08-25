@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { useWalletManager } from "@noahsaso/cosmodal";
@@ -74,6 +75,18 @@ const Header = ({ className }) => {
     const { search, searchHandler } = useFlyoutSearch();
     const { connect, connectedWallet } = useWalletManager();
     // const { connectedWallet, connect } = useContext(CustomWalletContext);
+    const finalMenuData = useMemo(() => {
+        if (connectedWallet) {
+            return menuData.concat([
+                {
+                    id: 6,
+                    text: "Create Mint",
+                    path: "/create-mint",
+                },
+            ]);
+        }
+        return menuData;
+    }, [connectedWallet]);
 
     return (
         <>
@@ -93,7 +106,7 @@ const Header = ({ className }) => {
                                     id="sideNav"
                                     className="mainmenu-nav d-none d-xl-block"
                                 >
-                                    <MainMenu menu={menuData} />
+                                    <MainMenu menu={finalMenuData} />
                                 </nav>
                             </div>
                         </div>
@@ -164,7 +177,7 @@ const Header = ({ className }) => {
             <MobileMenu
                 isOpen={offcanvas}
                 onClick={offcanvasHandler}
-                menu={menuData}
+                menu={finalMenuData}
                 logo={headerData.logo}
             />
         </>

@@ -8,7 +8,7 @@ import TabContainer from "react-bootstrap/TabContainer";
 import TabPane from "react-bootstrap/TabPane";
 import Nav from "react-bootstrap/Nav";
 import { useAppSelector } from "@app/hooks";
-import { MarketplaceContract, UserDefinedCollections } from "@constant";
+import { MarketplaceContract } from "@constant";
 import NftItem from "@components/nft-item";
 import { useContract } from "@hooks";
 import TopSeller from "@components/top-seller/layout-03";
@@ -22,6 +22,9 @@ const AuthorProfileArea = ({ className }) => {
     const { connectedWallet } = useWalletManager();
     const marketplaceNfts = useAppSelector((state) => state.marketplaceNfts);
     const myNftsFromStorage = useAppSelector((state) => state.myNfts);
+    const collectionAddresses = useAppSelector(
+        (state) => state.collections.addresses
+    );
 
     // useEffect(() => {
     //     if (!connectedWallet) {
@@ -59,10 +62,13 @@ const AuthorProfileArea = ({ className }) => {
         const myCreated = [];
         const myOwned = [];
         let myOnSale = [];
+        const userDefinedAddresses = (
+            collectionAddresses?.userDefined || []
+        ).map((collection) => collection.address);
         Object.keys(myNftsFromStorage || {}).forEach((key) => {
             const crrNfts = myNftsFromStorage[key];
             crrNfts.forEach((nft) => {
-                if (UserDefinedCollections.includes(nft.token_address)) {
+                if (userDefinedAddresses.includes(nft.token_address)) {
                     myCreated.push(nft);
                 } else {
                     myOwned.push(nft);
@@ -76,7 +82,12 @@ const AuthorProfileArea = ({ className }) => {
             });
         }
         return { onSale: myOnSale, created: myCreated, owned: myOwned };
-    }, [connectedWallet, marketplaceNfts, myNftsFromStorage]);
+    }, [
+        collectionAddresses,
+        connectedWallet,
+        marketplaceNfts,
+        myNftsFromStorage,
+    ]);
 
     return (
         <div className={clsx("rn-authore-profile-area", className)}>
