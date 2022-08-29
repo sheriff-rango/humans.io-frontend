@@ -1,6 +1,6 @@
 const ChainConfig = {
     chainName: "Devnet",
-    chainId: "test",
+    chainId: "testhuman",
     rpcEndpoint: "https://devnet-explorer-rpc.humans.zone/",
     restEndpoint: "https://devnet-explorer-api.humans.zone/",
     faucetEndpoint: "",
