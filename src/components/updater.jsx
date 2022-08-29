@@ -34,7 +34,7 @@ const Updater = () => {
                 const stateInfo = await runQuery(CollectionCreatorContract, {
                     get_state_info: {},
                 });
-                dispatch(setIsAdmin(address === stateInfo.admin));
+                dispatch(setIsAdmin(address === stateInfo?.admin));
             } else {
                 dispatch(setIsAdmin(false));
             }
