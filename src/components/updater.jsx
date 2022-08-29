@@ -16,6 +16,7 @@ import { setMarketplaceNfts } from "@app/marketplaceNftsSlice";
 // import { CustomWalletContext } from "@context";
 import { setBalance } from "@app/balanceSlice";
 import { clearMyNfs, setMyNfts } from "@app/myNftsSlice";
+import { setIsAdmin } from "@app/adminSlice";
 
 const MAX_ITEMS = 10;
 
@@ -26,6 +27,19 @@ const Updater = () => {
     const { signingCosmWasmClient, address } = useWallet(ChainConfig.chainId);
     const dispatch = useAppDispatch();
     const collections = useAppSelector((state) => state.collections);
+
+    useEffect(() => {
+        (async () => {
+            if (address) {
+                const stateInfo = await runQuery(CollectionCreatorContract, {
+                    get_state_info: {},
+                });
+                dispatch(setIsAdmin(address === stateInfo.admin));
+            } else {
+                dispatch(setIsAdmin(false));
+            }
+        })();
+    }, [address, dispatch, runQuery]);
 
     const fetchMarketplaceNfts = useCallback(async () => {
         Object.keys(collections).forEach(async (key) => {

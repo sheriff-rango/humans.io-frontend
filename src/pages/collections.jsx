@@ -52,8 +52,10 @@ const Collection = () => {
             slug: `/marketplace?nftAddress=${key}`,
             total_item: totalItem,
             image: {
-                // src: collection.collection_info?.background_url || "",
-                src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_301.png",
+                src:
+                    collection.collection_info?.background_url ||
+                    "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_301.png",
+                // src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_301.png",
             },
             thumbnails: [
                 {
@@ -67,8 +69,10 @@ const Collection = () => {
                 },
             ],
             profile_image: {
-                // src: collection.collection_info?.logo_url || "",
-                src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png",
+                src:
+                    collection.collection_info?.logo_url ||
+                    "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png",
+                // src: "https://secretsteampunks.mypinata.cloud/ipfs/QmZH3FPdSeJo17MNX7poDN8aTuNcKCC4qfaADhRJLCS1aj/SteamPunk_Robot_303.png",
             },
         };
     });

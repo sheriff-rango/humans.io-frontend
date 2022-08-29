@@ -48,7 +48,7 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
     };
 
     const onSubmit = async (data) => {
-        // console.log(data)
+        // console.log(data);
         if (!connectedWallet) {
             toast.error("Connect Wallet!");
             return;
@@ -73,8 +73,7 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
                 const logo_url = `https://secretsteampunks.mypinata.cloud/ipfs/${logoImageHash}`;
                 let msg = {};
                 if (isAdminPage) {
-                    const time = new Date();
-                    const crr_time = Math.floor(time / 1000) + 1800;
+                    const startTime = Number(new Date(data.startTime)) / 1000;
                     msg = {
                         add_admin_collection: {
                             collection_info: {
@@ -93,7 +92,7 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
                                 mint_info: {
                                     base_token_uri: data.tokenUri,
                                     total_supply: data.totalSupply,
-                                    start_mint_time: crr_time,
+                                    start_mint_time: startTime,
                                     per_address_limit: data.perAddressLimit,
                                     public_price: {
                                         denom: "uheart",
@@ -586,6 +585,28 @@ const CreateNewArea = ({ className, space, isAdminPage }) => {
                                                                     }
                                                                 </ErrorText>
                                                             )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-md-12">
+                                                        <div className="input-box pb--20">
+                                                            <label
+                                                                className="form-label"
+                                                                htmlFor="startTime"
+                                                            >
+                                                                Start Time (UTC)
+                                                            </label>
+                                                            <input
+                                                                type="datetime-local"
+                                                                id="startTime"
+                                                                {...register(
+                                                                    "startTime",
+                                                                    {
+                                                                        required:
+                                                                            "Start Time is required",
+                                                                    }
+                                                                )}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>

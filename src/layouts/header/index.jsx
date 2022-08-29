@@ -14,6 +14,7 @@ import Anchor from "@ui/anchor";
 import Button from "@ui/button";
 import { useOffcanvas, useSticky, useFlyoutSearch } from "@hooks";
 import { checkKeplr } from "src/context/WalletProvider";
+import { useAppSelector } from "@app/hooks";
 // import { CustomWalletContext } from "@context";
 
 const headerData = {
@@ -75,8 +76,9 @@ const Header = ({ className }) => {
     const { search, searchHandler } = useFlyoutSearch();
     const { connect, connectedWallet } = useWalletManager();
     // const { connectedWallet, connect } = useContext(CustomWalletContext);
+    const isAdmin = useAppSelector((state) => state.admin.isAdmin);
     const finalMenuData = useMemo(() => {
-        if (connectedWallet) {
+        if (connectedWallet && isAdmin) {
             return menuData.concat([
                 {
                     id: 6,
@@ -86,7 +88,7 @@ const Header = ({ className }) => {
             ]);
         }
         return menuData;
-    }, [connectedWallet]);
+    }, [connectedWallet, isAdmin]);
 
     return (
         <>

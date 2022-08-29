@@ -58,10 +58,7 @@ const MintItem = ({
             stateInfo.start_mint_time &&
             new Date(stateInfo.start_mint_time * 1000);
 
-        const isBefore =
-            startMintTime && Number(new Date()) < Number(startMintTime);
-
-        return { mintPrice, startMintTime, isBefore };
+        return { mintPrice, startMintTime };
     }, [stateInfo, connectedWallet]);
 
     const handleBidModal = () => {
@@ -69,7 +66,10 @@ const MintItem = ({
             toast.error("Connect wallet!");
             return;
         }
-        if (mintInfo.isBefore) {
+        const isBefore =
+            mintInfo.startMintTime &&
+            Number(new Date()) < Number(mintInfo.startMintTime);
+        if (isBefore) {
             toast.error("Mint is not started!");
             return;
         }

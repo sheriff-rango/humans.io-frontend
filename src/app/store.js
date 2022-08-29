@@ -6,6 +6,7 @@ import collectionReducer from "./collectionsSlice";
 import marketplaceNftsReducer from "./marketplaceNftsSlice";
 import myNftsReducer from "./myNftsSlice";
 import balanceReducer from "./balanceSlice";
+import adminReducer from "./adminSlice";
 
 const persistConfig = {
     key: "root",
@@ -15,6 +16,7 @@ const persistConfig = {
 const reducer = persistReducer(
     persistConfig,
     combineReducers({
+        admin: adminReducer,
         collections: collectionReducer,
         marketplaceNfts: marketplaceNftsReducer,
         myNfts: myNftsReducer,
