@@ -5,14 +5,18 @@ import { useWalletManager } from "@noahsaso/cosmodal";
 import Logo from "@components/logo";
 import MainMenu from "@components/menu/main-menu";
 import MobileMenu from "@components/menu/mobile-menu";
-import SearchForm from "@components/search-form/layout-01";
-import FlyoutSearchForm from "@components/search-form/layout-02";
+// import SearchForm from "@components/search-form/layout-01";
+// import FlyoutSearchForm from "@components/search-form/layout-02";
 import UserDropdown from "@components/user-dropdown";
 import ColorSwitcher from "@components/color-switcher";
 import BurgerButton from "@ui/burger-button";
 import Anchor from "@ui/anchor";
 import Button from "@ui/button";
-import { useOffcanvas, useSticky, useFlyoutSearch } from "@hooks";
+import {
+    useOffcanvas,
+    useSticky,
+    // useFlyoutSearch
+} from "@hooks";
 import { checkKeplr } from "src/context/WalletProvider";
 import { useAppSelector } from "@app/hooks";
 // import { CustomWalletContext } from "@context";
@@ -56,11 +60,11 @@ const menuData = [
         text: "Create",
         path: "#!",
         submenu: [
-            {
-                id: 51,
-                text: "Create Collection",
-                path: "/create-collection",
-            },
+            // {
+            //     id: 51,
+            //     text: "Create Collection",
+            //     path: "/create-collection",
+            // },
             {
                 id: 52,
                 text: "Create NFT",
@@ -73,7 +77,7 @@ const menuData = [
 const Header = ({ className }) => {
     const sticky = useSticky();
     const { offcanvas, offcanvasHandler } = useOffcanvas();
-    const { search, searchHandler } = useFlyoutSearch();
+    // const { search, searchHandler } = useFlyoutSearch();
     const { connect, connectedWallet } = useWalletManager();
     // const { connectedWallet, connect } = useContext(CustomWalletContext);
     const isAdmin = useAppSelector((state) => state.admin.isAdmin);
@@ -113,7 +117,7 @@ const Header = ({ className }) => {
                             </div>
                         </div>
                         <div className="header-right">
-                            <div className="setting-option d-none d-lg-block">
+                            {/* <div className="setting-option d-none d-lg-block">
                                 <SearchForm />
                             </div>
                             <div className="setting-option rn-icon-list d-block d-lg-none">
@@ -127,7 +131,7 @@ const Header = ({ className }) => {
                                     </button>
                                 </div>
                                 <FlyoutSearchForm isOpen={search} />
-                            </div>
+                            </div> */}
                             {!connectedWallet && (
                                 <div className="setting-option header-btn">
                                     <div className="icon-box">

@@ -2,23 +2,23 @@ import SEO from "@components/seo";
 import Wrapper from "@layout/wrapper";
 import Header from "@layout/header";
 import Footer from "@layout/footer";
-import AuthorIntroArea from "@containers/author-intro";
-import AuthorProfileArea from "@containers/author-profile";
+import Breadcrumb from "@components/breadcrumb";
+import EditProfileArea from "@containers/edit-profile";
 
 export async function getStaticProps() {
     return { props: { className: "template-color-1" } };
 }
 
-const Profile = () => (
+const EditProfile = () => (
     <Wrapper>
-        <SEO pageTitle="Profile" />
+        <SEO pageTitle="Edit Profile" />
         <Header />
         <main id="main-content">
-            <AuthorIntroArea />
-            <AuthorProfileArea />
+            <Breadcrumb pageTitle="Edit Profile" currentPage="Edit Profile" />
+            <EditProfileArea />
         </main>
         <Footer />
     </Wrapper>
 );
 
-export default Profile;
+export default EditProfile;

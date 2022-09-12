@@ -102,6 +102,9 @@ const UserDropdown = () => {
                 </div> */}
                 <ul className="list-inner">
                     <li>
+                        <Anchor path="/my-collections">My Collections</Anchor>
+                    </li>
+                    <li>
                         <Anchor path="/profile">My Profile</Anchor>
                     </li>
                     <li>

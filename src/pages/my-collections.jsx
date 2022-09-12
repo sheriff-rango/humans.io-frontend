@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import SEO from "@components/seo";
 import Wrapper from "@layout/wrapper";
 import Header from "@layout/header";
@@ -6,40 +5,18 @@ import Footer from "@layout/footer";
 import Breadcrumb from "@components/breadcrumb";
 import CollectionArea from "@containers/collection";
 import { useAppSelector } from "@app/hooks";
-
-// demo data
-// const collectionsData = [
-//     {
-//         id: 1,
-//         title: "Cubic Trad",
-//         slug: "/marketplace",
-//         total_item: 27,
-//         image: {
-//             src: "/images/collection/collection-lg-01.jpg",
-//         },
-//         thumbnails: [
-//             {
-//                 src: "/images/collection/collection-sm-01.jpg",
-//             },
-//             {
-//                 src: "/images/collection/collection-sm-02.jpg",
-//             },
-//             {
-//                 src: "/images/collection/collection-sm-03.jpg",
-//             },
-//         ],
-//         profile_image: {
-//             src: "/images/client/client-15.png",
-//         },
-//     },
-// ];
+import { useMemo } from "react";
+import { useWalletManager } from "@noahsaso/cosmodal";
+import Button from "@ui/button";
+import Anchor from "@ui/anchor";
 
 export async function getStaticProps() {
     return { props: { className: "template-color-1" } };
 }
 
-const Collection = () => {
+const MyCollections = () => {
     const collections = useAppSelector((state) => state.collections);
+    const { connectedWallet } = useWalletManager();
     const collectionsData = useMemo(() => {
         const result = [];
         Object.keys(collections).forEach((key) => {
@@ -49,7 +26,10 @@ const Collection = () => {
             )
                 ? 0
                 : Number(collection.mint_info?.total_supply);
-            if (key !== "addresses") {
+            if (
+                key !== "addresses" &&
+                collection.minter === connectedWallet?.address
+            ) {
                 result.push({
                     id: key,
                     title: collection.collection_info?.title || "",
@@ -82,8 +62,7 @@ const Collection = () => {
             }
         });
         return result;
-    }, [collections]);
-
+    }, [collections, connectedWallet]);
     return (
         <Wrapper>
             <SEO pageTitle="Collections" />
@@ -93,6 +72,13 @@ const Collection = () => {
                     pageTitle="Our Collections"
                     currentPage="Collections"
                 />
+                <div className="ptb--30">
+                    <Button>
+                        <Anchor path="/create-collection">
+                            Create a Collection
+                        </Anchor>
+                    </Button>
+                </div>
                 <CollectionArea data={{ collections: collectionsData }} />
             </main>
             <Footer />
@@ -100,4 +86,4 @@ const Collection = () => {
     );
 };
 
-export default Collection;
+export default MyCollections;
