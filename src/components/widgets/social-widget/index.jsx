@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 
 const SocialWidget = ({ socials, others }) => (
     <>
-        <ul className="social-others">
+        <ul className="social-others footer-list-one">
             {others?.map((social) => (
-                <li key={social.id}>
+                <li key={social.id} className="single-list">
                     <a
                         href={social.link}
                         target="_blank"
