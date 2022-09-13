@@ -13,7 +13,7 @@ const data = {
         {
             id: 1,
             title: "Set up your wallet",
-            path: "/connect",
+            path: "/",
             subtitle: "Step-01",
             description:
                 "Powerful features and inclusions, which makes Nuron standout, easily customizable and scalable.",
@@ -26,7 +26,7 @@ const data = {
         {
             id: 2,
             title: "Create your collection",
-            path: "/collection",
+            path: "/collections",
             subtitle: "Step-02",
             description:
                 "A great collection of beautiful website templates for your need. Choose the best suitable template.",
@@ -39,7 +39,7 @@ const data = {
         {
             id: 3,
             title: "Add your NFT's",
-            path: "/connect",
+            path: "/create-nft",
             subtitle: "Step-03",
             description:
                 "We've made the template fully responsive, so it looks great on all devices: desktop, tablets and.",
@@ -52,7 +52,7 @@ const data = {
         {
             id: 4,
             title: "Sell Your NFT's",
-            path: "/creator",
+            path: "/",
             subtitle: "Step-04",
             description:
                 "I throw myself down among the tall grass by the stream as I lie close to the earth NFT's.",
