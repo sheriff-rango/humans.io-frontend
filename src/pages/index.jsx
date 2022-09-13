@@ -3,6 +3,7 @@ import Wrapper from "@layout/wrapper";
 import Header from "@layout/header";
 import Footer from "@layout/footer";
 import ServiceArea from "@containers/services/layout-01";
+import HeroArea from "@containers/hero/layout-01";
 
 const data = {
     section: "service-section",
@@ -64,6 +65,41 @@ const data = {
         },
     ],
 };
+const heroData = {
+    section: "hero-section",
+    headings: [
+        {
+            id: 1,
+            content:
+                "Discover Digital Art, Collect and Sell Your Specific NFTs.",
+        },
+    ],
+    texts: [
+        {
+            id: 1,
+            content:
+                "Partner with one of the world's largest retailers to showcase your brand and products.",
+        },
+    ],
+    buttons: [
+        {
+            id: 1,
+            content: "Get Started",
+            path: "/",
+        },
+        {
+            id: 2,
+            color: "primary-alta",
+            content: "Create",
+            path: "/create-nft",
+        },
+    ],
+    images: [
+        {
+            src: "/images/slider/slider-1.png",
+        },
+    ],
+};
 
 export async function getStaticProps() {
     return { props: { className: "template-color-1" } };
@@ -74,6 +110,7 @@ const Home = () => (
         <SEO pageTitle="Home Default" />
         <Header />
         <div id="main-content">
+            <HeroArea data={heroData} />
             <ServiceArea data={data} />
         </div>
         <Footer />
