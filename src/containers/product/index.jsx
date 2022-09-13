@@ -32,7 +32,7 @@ const ProductArea = ({ className, space, data }) => (
                         </h2>
                     )}
 
-                    <TabContainer defaultActiveKey="nav-home">
+                    <TabContainer defaultActiveKey="nav-all">
                         <Nav className="product-tab-nav">
                             <div className="nav">
                                 <Nav.Link as="button" eventKey="nav-all">
